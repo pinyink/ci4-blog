@@ -1,5 +1,27 @@
-# ci4_rbac
-setelah git clone lalu ketik perintah "composer update" -> import database -> sesuaikan koneksi di file app/config/database.php
 
-username : pindi
-password: 123
+# Codeigniter 4 Blog
+
+
+
+
+## Migration Database
+
+customize your database connection in .env file and run tests
+
+```bash
+  php spark migrate
+```
+
+and then
+```bash
+  php spark db:seed user
+```
+
+
+## Login
+
+```javascript
+username: admin
+password: admin
+```
+
