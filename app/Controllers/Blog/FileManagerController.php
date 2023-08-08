@@ -71,7 +71,7 @@ class FileManagerController extends BaseController
         if ($search == null) {
             $query = $fileManagerModel->paginate($limit, 'default', $id);
         } else {
-            $query = $fileManagerModel->like('file_name', $search)->paginate($limit, 'default', $id);
+            $query = $fileManagerModel->like('files_name', $search)->paginate($limit, 'default', $id);
         }
         $html = "";
         foreach ($query as $key => $value) {

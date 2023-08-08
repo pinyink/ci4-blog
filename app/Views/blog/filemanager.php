@@ -65,7 +65,7 @@
                             <div class="input-group">
                                 <input class="form-control" type="text" placeholder="Search" name="search">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-info" type="button" onclick="getList(1)">Search</button>
+                                    <button class="btn btn-info" type="button" onclick="getList(1)"><i class="fa fa-search"></i></button>
                                 </div>
                             </div>
                         </div>
