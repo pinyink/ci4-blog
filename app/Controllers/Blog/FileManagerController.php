@@ -61,17 +61,23 @@ class FileManagerController extends BaseController
         echo json_encode($output);
     }
 
-    public function getList(int $id = 1)
+    public function getList()
     {
         $fileManagerModel = new FileManagerModel();
         $limit = 10;
+        $id = $this->request->getPost('id');
+        $search = $this->request->getPost('search');
         // $query = $fileManagerModel->findAll($limit);
-        $query = $fileManagerModel->paginate($limit, 'default', $id);
+        if ($search == null) {
+            $query = $fileManagerModel->paginate($limit, 'default', $id);
+        } else {
+            $query = $fileManagerModel->like('file_name', $search)->paginate($limit, 'default', $id);
+        }
         $html = "";
         foreach ($query as $key => $value) {
             $img = in_array($value['files_ext'], ['jpg', 'jpeg', 'png']) ? base_url($value['files_path']) : base_url('assets/admincast/dist/assets/img/file.png');
             $html .= "<div class=\"col-md-3 col-xs-4\">
-            <div class=\"card\">
+            <div class=\"card mb-3\">
                 <img class=\"card-img-top\" src=\"".$img."\" style=\"max-height: 320px\"/>
                 <div class=\"card-body\">
                     <h4 class=\"card-title\">".$value['files_name']."</h4>
@@ -101,7 +107,7 @@ class FileManagerController extends BaseController
 		$imgfiles_path = $this->request->getFile('val_files_path');
 
         $validation = [
-            'val_files_name' => 'required','val_files_desc' => 'required','val_files_path' => 'required',
+            'val_files_name' => 'required','val_files_desc' => 'required',
         ];
 
         

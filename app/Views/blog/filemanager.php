@@ -8,8 +8,15 @@
 <link href="<?=base_url();?>/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
 
 <style>
+    .formsearch {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+
     #search {
-        width: 15%;
+        width: 320px;
     }
 
     .btn {
@@ -52,12 +59,13 @@
                     </div>
                 </div>
                 <div class="ibox-body">
-                    <form action="">
+                    <form action="" class="formsearch">
+                        <?=csrf_field();?>
                         <div class="form-group" id="search">
                             <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Search">
+                                <input class="form-control" type="text" placeholder="Search" name="search">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-info" type="button">Search</button>
+                                    <button class="btn btn-info" type="button" onclick="getList(1)">Search</button>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +105,7 @@
                     </div>
 					<div class="form-group" id="divform_files_path">
                         <?=form_label('File', 'val_files_path');?>
-                        <?=form_upload('val_files_path', '', ['class' => 'form-control', 'id' => 'val_files_path', 'accept' => ".png,.jpg,.jpeg", 'onchange' => "readURL(this, 'img-preview-files_path');"]);?>
+                        <?=form_upload('val_files_path', '', ['class' => 'form-control', 'id' => 'val_files_path', 'onchange' => "readURL(this, 'img-preview-files_path');"]);?>
                     </div>
                     <div class="row">
                         <div class="col-md-6" id="divimage_files_path">
@@ -130,13 +138,19 @@
     var save_method;
     function getList(id) {
         $.ajax({
-            type: "GET",
-            url: "<?=base_url('/blog/filemanager/get_list');?>/"+id,
+            type: "POST",
+            url: "<?=base_url('/blog/filemanager/get_list');?>",
+            data: {
+                csrf_test_name: '<?=csrf_hash();?>',id: id,search: $('[name="search"]').val()
+            },
             dataType: "JSON",
             success: function (response) {
                 $('#divList').html(response.html);
                 $('#pager').html(response.pager);
-            }
+            },
+            error: function(e) {
+                console.log(e.responseText);
+            },
         });
     }
 
@@ -288,11 +302,6 @@
 				maxlength: 256
             },
 
-			val_files_path: {
-                required: true,
-				maxlength: 512
-            },
-
             },
             messages: {
 				val_files_name: {
@@ -302,11 +311,6 @@
 				val_files_desc: {
                     required:'Description harus diisi',maxlength: 'Description Tidak Boleh Lebih dari 256 Huruf'
                 },
-
-				val_files_path: {
-                    required:'File harus diisi',maxlength: 'File Tidak Boleh Lebih dari 512 Huruf'
-                },
-
 
             },
             highlight: function(e) {
@@ -341,7 +345,10 @@
                             getList();
                             $('#modalfilemanager').modal('hide');
                         } else {
-                            toast_error(response.errorMessage);
+                            alertify.set('notifier', 'position', 'top-right');
+                            alertify.notify('<span><i class="fa fa-bell"></i> ' + response.errorMessage + '</span>', response.errorType, 5, function() {
+                                console.log('dismissed');
+                            });
                         }
                     },
                     error: function(jqXHR){
