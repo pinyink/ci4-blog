@@ -111,7 +111,7 @@ $routes->group('/blog/categories', ['namespace' => 'App\Controllers\Blog'], stat
 
 $routes->group('/blog/filemanager', ['namespace' => 'App\Controllers\Blog'], static function($routes) {
     $routes->get('/', 'FileManagerController::index', ['filter' => 'auth:Y,2,1']);
-    $routes->get('get_list', 'FileManagerController::getList', ['filter' => 'auth:N,2,1']);
+    $routes->get('get_list/(:num)', 'FileManagerController::getList/$1', ['filter' => 'auth:N,2,1']);
     $routes->post('ajax_list', 'FileManagerController::ajaxList', ['filter' => 'auth:N,2,1']);
     $routes->post('save_data', 'FileManagerController::saveData', ['filter' => 'auth:N,2,2']);
     $routes->post('update_data', 'FileManagerController::saveData', ['filter' => 'auth:N,2,3']);

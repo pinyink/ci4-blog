@@ -65,6 +65,7 @@
                     <div class="row" id="divList">
                         
                     </div>
+                    <hr>
                     <div id="pager"></div>
                 </div>
             </div>
@@ -127,10 +128,10 @@
 <script>
     var table;
     var save_method;
-    function getList() {
+    function getList(id) {
         $.ajax({
             type: "GET",
-            url: "<?=base_url('/blog/filemanager/get_list');?>",
+            url: "<?=base_url('/blog/filemanager/get_list');?>/"+id,
             dataType: "JSON",
             success: function (response) {
                 $('#divList').html(response.html);
@@ -140,7 +141,7 @@
     }
 
     $(document).ready(function () {
-        getList();
+        getList(1);
 	});
 
     function reset_form() {

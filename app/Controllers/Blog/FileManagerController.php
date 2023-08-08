@@ -65,13 +65,14 @@ class FileManagerController extends BaseController
     {
         $fileManagerModel = new FileManagerModel();
         $limit = 10;
-        $query = $fileManagerModel->findAll($limit);
+        // $query = $fileManagerModel->findAll($limit);
+        $query = $fileManagerModel->paginate($limit, 'default', $id);
         $html = "";
         foreach ($query as $key => $value) {
             $img = in_array($value['files_ext'], ['jpg', 'jpeg', 'png']) ? base_url($value['files_path']) : base_url('assets/admincast/dist/assets/img/file.png');
-            $html .= "<div class=\"col-md-2\">
+            $html .= "<div class=\"col-md-3 col-xs-4\">
             <div class=\"card\">
-                <img class=\"card-img-top\" src=\"".$img."\" />
+                <img class=\"card-img-top\" src=\"".$img."\" style=\"max-height: 320px\"/>
                 <div class=\"card-body\">
                     <h4 class=\"card-title\">".$value['files_name']."</h4>
                     <div>".$value['files_desc']."</div>
@@ -84,14 +85,9 @@ class FileManagerController extends BaseController
             </div>
         </div>";
         }
-
-        $pager = \Config\Services::pager();
-        $page    = (int) $id;
-        $perPage = $limit;
-        $total   = $fileManagerModel->countAllResults();
-
-        // Call makeLinks() to make pagination links.
-        $pager_links = $pager->makeLinks($page, $perPage, $total);
+        
+        $pager = $fileManagerModel->pager;
+        $pager_links = $pager->links('default', 'front_full');
 
         return $this->response->setJSON(['html' => $html, 'pager' => $pager_links]);
     }
