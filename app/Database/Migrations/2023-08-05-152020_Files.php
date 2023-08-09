@@ -25,6 +25,11 @@ class Files extends Migration
                 'constraint' => '256',
                 'default' => null
             ],
+            'files_file' => [
+                'type' => 'VARCHAR',
+                'constraint' => '64',
+                'default' => null
+            ],
             'files_path' => [
                 'type' => 'VARCHAR',
                 'constraint' => '512',

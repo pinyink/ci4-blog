@@ -96,7 +96,7 @@
                 </div>
                 <div class="modal-body">
 					<div class="form-group">
-                        <?=form_label('Name File');?>
+                        <?=form_label('Name');?>
                         <?=form_input('val_files_name', '', ['class' => 'form-control'], 'text');?>
                     </div>
 					<div class="form-group">
@@ -107,14 +107,13 @@
                         <?=form_label('File', 'val_files_path');?>
                         <?=form_upload('val_files_path', '', ['class' => 'form-control', 'id' => 'val_files_path', 'onchange' => "readURL(this, 'img-preview-files_path');"]);?>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6" id="divimage_files_path">
-                            <h6 id="himage_files_path">File</h6>
-                            <img src="<?=base_url('assets/admincast/dist/assets/img/image.jpg') ?>" alt="" class="img img-thumbnail img-preview " id="img-preview-files_path" style="width: 100px; height: 100px;">
-                        </div>
-                        <div class="col-md-6" id="divcol_files_path">
-                            <img src="<?=base_url('assets/admincast/dist/assets/img/image.jpg') ?>" alt="" class="img img-thumbnail img-preview" id="img-old-files_path" style="width: 100px; height: 100px;">
-                        </div>
+                    <div class="form-group">
+                        <?=form_label('Doc Name', 'val_files_file');?>
+                        <?=form_input('val_files_file', '', ['class' => 'form-control']);?>
+                    </div>
+                    <div class="form-group">
+                        <?=form_label('Path', 'val_path');?>
+                        <?=form_input('val_path', '', ['class' => 'form-control']);?>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -167,31 +166,6 @@
         $('#divform_files_path').show();$('#divcol_files_path').show();$('#himage_files_path').hide();
     }
 
-    function lihat_data(id) {
-        reset_form();
-        save_method = 'update';
-        $('#formfilemanager').valid();
-        $('[name="method"]').val('update');
-        $('#formfilemanager .form-control').addClass('form-view-detail');
-        $('#formfilemanager .form-control').prop('disabled', true);
-        $('#formfilemanager button[type="submit"]').hide();
-        $.ajax({
-            type: "GET",
-            url: "<?=base_url('/blog/filemanager');?>/"+id+'/get_data',
-            dataType: "JSON",
-            success: function (response) {
-                $('#modalfilemanager').modal('show');
-                $('#modalfilemanager .modal-title').text('Detail Data');
-                $('[name="files_id"]').val(response.files_id);
-                $('#divform_files_path').hide();$('#divcol_files_path').hide();$('#himage_files_path').show();$('[name="val_files_name"]').val(response.files_name);
-				$('[name="val_files_desc"]').val(response.files_desc);
-				$('#img-old-files_path').attr('src', '<?=base_url('')?>/'+response.files_path);
-				$('#img-preview-files_path').attr('src', '<?=base_url('assets/admincast/dist/assets/img/image.jpg')?>');
-				
-            }
-        });
-    }
-
     <?php if(enforce(2, 2)): ?>
     function tambah_data() {
         save_method = 'save';
@@ -225,9 +199,8 @@
                 $('[name="files_id"]').val(response.files_id);
                 $('[name="val_files_name"]').val(response.files_name);
 				$('[name="val_files_desc"]').val(response.files_desc);
-				$('#img-old-files_path').attr('src', '<?=base_url('')?>/'+response.files_path);
-				$('#img-preview-files_path').attr('src', '<?=base_url('assets/admincast/dist/assets/img/image.jpg')?>');
-				
+				$('[name="val_path"]').val(response.files_path);
+                $('[name="val_files_file"]').val(response.files_file);
             }
         });
     }

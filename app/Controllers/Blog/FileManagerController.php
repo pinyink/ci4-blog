@@ -75,7 +75,7 @@ class FileManagerController extends BaseController
         }
         $html = "";
         foreach ($query as $key => $value) {
-            $img = in_array($value['files_ext'], ['jpg', 'jpeg', 'png']) ? base_url($value['files_path']) : base_url('assets/admincast/dist/assets/img/file.png');
+            $img = in_array($value['files_ext'], ['jpg', 'jpeg', 'png']) ? base_url($value['files_path'].'/'.$value['files_file']) : base_url('assets/admincast/dist/assets/img/file.png');
             $html .= "<div class=\"col-md-3 col-xs-4\">
             <div class=\"card mb-3\">
                 <img class=\"card-img-top\" src=\"".$img."\" style=\"max-height: 320px\"/>
@@ -139,6 +139,12 @@ class FileManagerController extends BaseController
         $id = $this->request->getPost('files_id');
 		$data['files_name'] = $this->request->getPost('val_files_name');
 		$data['files_desc'] = $this->request->getPost('val_files_desc');
+        $data['files_file'] = $this->request->getPost('val_files_file');
+
+        if ($method != 'save') {
+            $oldQuery = $fileManagerModel->find($id);
+        }
+
 		if (!empty($_FILES['val_files_path']['name'])) {
 			$th = date('Y') . '/' . date('m').'/'.date('d');
 			$path = 'uploads/blog/filemanager/';
@@ -147,19 +153,17 @@ class FileManagerController extends BaseController
 			if (!file_exists($dir)) {
 				mkdir($dir, 0777, true);
 			}
-			$newName = $imgfiles_path->getRandomName();
+			$newName = $data['files_file'];
 			$imgfiles_path->move($dir, $newName);
-			$data['files_path'] = $_dir.'/'.$newName;
+			$data['files_path'] = $_dir;
             
-            $file = new \CodeIgniter\Files\File(ROOTPATH.'public/'.$data['files_path']);
+            $file = new \CodeIgniter\Files\File(ROOTPATH.'public/'.$_dir.'/'.$newName);
             $data['files_size'] = $file->getSizeByUnit('kb');
             $data['files_mime'] = $file->getMimeType();
             $data['files_ext'] = $file->guessExtension();
-            if ($method != 'save') {
-                $oldQuery = $fileManagerModel->find($id);
-                if (!empty($oldQuery['files_path'])) {
-                    unlink(ROOTPATH.'public/'.$oldQuery['files_path']);
-                }
+            
+            if (!empty($oldQuery['files_path'])) {
+                unlink(ROOTPATH.'public/'.$oldQuery['files_path'].'/'.$data['files_file']);
             }
 		}
 
@@ -170,6 +174,10 @@ class FileManagerController extends BaseController
             $log['errorType'] = 'success';
             return $this->response->setJSON($log);
         } else {
+            if (!file_exists(ROOTPATH.'public/'.$oldQuery['files_path'].'/'. $data['files_file'])) {
+                $file = new \CodeIgniter\Files\File(ROOTPATH.'public/'.$oldQuery['files_path'].'/'.$oldQuery['files_file']);
+                $file->move(ROOTPATH.'public/'.$oldQuery['files_path'].'/', $data['files_file']);
+            }
             $fileManagerModel->update($id, $data);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Update Data Berhasil';
@@ -181,7 +189,8 @@ class FileManagerController extends BaseController
     public function getData($id)
     {
         $fileManagerModel = new FileManagerModel();
-        $query = $fileManagerModel->select("files_id, files_name, files_desc, files_path")->find($id);
+        $query = $fileManagerModel->select("files_id, files_name, files_desc, files_path, files_file")->find($id);
+        $query['path'] = base_url($query['files_path']);
         return $this->response->setJSON($query);
     }
 

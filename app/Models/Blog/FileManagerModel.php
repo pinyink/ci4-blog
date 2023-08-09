@@ -14,7 +14,7 @@ class FileManagerModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['files_name', 'files_desc', 'files_path', 'files_mime', 'files_size', 'files_ext'];
+    protected $allowedFields    = ['files_name', 'files_desc', 'files_file', 'files_path', 'files_mime', 'files_size', 'files_ext'];
 
     // Dates
     protected $useTimestamps = true;
