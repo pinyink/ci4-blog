@@ -15,15 +15,21 @@ class Post extends Migration
                 'unsigned' => true,
                 'auto_increment' => true
             ],
+            'post_url' => [
+                'type' => 'VARCHAR',
+                'constaint' => '128',
+                'unique' => true
+            ],
             'post_desc' => [
                 'type' => 'VARCHAR',
                 'constaint' => '256',
                 'default' => NULL
             ],
-            'post_url' => [
-                'type' => 'VARCHAR',
-                'constaint' => '128',
-                'unique' => true
+            'post_visited' => [
+                'type' => 'BIGINT',
+                'constraint' => '16',
+                'unsigned' => true,
+                'default' => 0
             ],
             'post_created_at' => [
                 'type' => 'datetime',
