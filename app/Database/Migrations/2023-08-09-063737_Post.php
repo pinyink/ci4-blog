@@ -17,19 +17,24 @@ class Post extends Migration
             ],
             'post_url' => [
                 'type' => 'VARCHAR',
-                'constaint' => '128',
+                'constraint' => '128',
                 'unique' => true
+            ],
+            'post_title' => [
+                'type' => 'VARCHAR',
+                'constraint' => '256',
+                'default' => null,
             ],
             'post_desc' => [
                 'type' => 'VARCHAR',
-                'constaint' => '256',
+                'constraint' => '256',
                 'default' => NULL
             ],
             'post_visited' => [
                 'type' => 'BIGINT',
                 'constraint' => '16',
                 'unsigned' => true,
-                'default' => 0
+                'default' => '0'
             ],
             'post_created_at' => [
                 'type' => 'datetime',

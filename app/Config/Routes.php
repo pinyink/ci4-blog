@@ -90,13 +90,23 @@ $routes->group('/admin/menuakses', ['namespace' => 'App\Controllers\Admin'], sta
 $routes->get('/menu_dua', 'Menu_dua::index', ['filter' => 'auth:N, 2, 1', 'namespace' => 'App\Controllers']);
 $routes->get('/menu_satu', 'Menu_satu::index', ['filter' => 'auth:N, 1, 1', 'namespace' => 'App\Controllers']);
 
-$routes->group('/siswa', ['namespace' => 'App\Controllers'], static function($routes) {
-    $routes->get('/', 'SiswaController::index', ['filter' => 'auth:Y,1,1']);
-    $routes->post('ajax_list', 'SiswaController::ajaxList', ['filter' => 'auth:N,1,1']);
-    $routes->post('save_data', 'SiswaController::saveData', ['filter' => 'auth:N,1,2']);
-    $routes->post('update_data', 'SiswaController::saveData', ['filter' => 'auth:N,1,3']);
-    $routes->get('(:num)/get_data', 'SiswaController::getData/$1', ['filter' => 'auth:N,1,1']);
-    $routes->delete('(:num)/delete_data', 'SiswaController::deleteData/$1', ['filter' => 'auth:N,1,4']);
+$routes->group('/blog/post', ['namespace' => 'App\Controllers\Blog'], static function($routes) {
+    $routes->get('/', 'PostController::index', ['filter' => 'auth:Y,3,1']);
+    $routes->post('ajax_list', 'PostController::ajaxList', ['filter' => 'auth:N,3,1']);
+    $routes->post('save_data', 'PostController::saveData', ['filter' => 'auth:N,3,2']);
+    $routes->post('update_data', 'PostController::saveData', ['filter' => 'auth:N,3,3']);
+    $routes->get('(:num)/get_data', 'PostController::getData/$1', ['filter' => 'auth:N,3,1']);
+    $routes->delete('(:num)/delete_data', 'PostController::deleteData/$1', ['filter' => 'auth:N,3,4']);
+	$routes->post('post_url_exist', 'PostController::posturlExist', ['filter' => 'auth:N,3,2']);
+});
+
+$routes->group('/blog/postbody', ['namespace' => 'App\Controllers\Blog'], static function($routes) {
+    $routes->get('(:num)/index', 'PostBodyController::index/$1', ['filter' => 'auth:Y,3,1']);
+    $routes->post('ajax_list', 'PostBodyController::ajaxList', ['filter' => 'auth:N,3,1']);
+    $routes->post('save_data', 'PostBodyController::saveData', ['filter' => 'auth:N,3,2']);
+    $routes->post('update_data', 'PostBodyController::saveData', ['filter' => 'auth:N,3,3']);
+    $routes->get('(:num)/get_data', 'PostBodyController::getData/$1', ['filter' => 'auth:N,3,1']);
+    $routes->delete('(:num)/delete_data', 'PostBodyController::deleteData/$1', ['filter' => 'auth:N,3,4']);
 });
 
 $routes->group('/blog/categories', ['namespace' => 'App\Controllers\Blog'], static function($routes) {

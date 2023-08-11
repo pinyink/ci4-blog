@@ -25,8 +25,8 @@ class PostBody extends Migration
                 'default' => NULL,
             ],
             'post_body_categori' => [
-                'type' => 'INT',
-                'constraint' => '11',
+                'type' => 'VARCHAR',
+                'constraint' => '50',
                 'default' => null,
             ],
             'post_body_order' => [
