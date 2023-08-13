@@ -8,6 +8,15 @@
 <link href="<?=base_url();?>/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
 <link href="<?=base_url();?>/assets/admincast/dist/assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet" />
 
+<style>
+    .navigasi {
+        position: fixed;
+        right: 10px;
+        top: 20vh;
+        background-color: black;
+        z-index: 999;
+    }
+</style>
 <?=$this->endSection();?>
 
 <?=$this->section('content'); ?>
@@ -22,6 +31,9 @@
     </ol>
 </div>
 
+<div class="navigasi">
+    <button type="button" class="btn btn-primary" onclick="tambah_data()"><i class="fa fa-plus"></i> Tambah Post</button>
+</div>
 <!-- Container -->
 <div class="page-content fade-in-up">
     <!-- Row -->
