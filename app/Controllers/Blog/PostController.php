@@ -4,6 +4,7 @@ namespace App\Controllers\Blog;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use App\Models\Blog\CategoriesTransModel;
 use CodeIgniter\Database\RawSql;
 use App\Models\Blog\PostModel;
 
@@ -66,6 +67,7 @@ class PostController extends BaseController
     public function saveData()
     {
         $postModel = new PostModel();
+        $categoriesTransModel = new CategoriesTransModel();
 
         $method = $this->request->getPost('method');
         
@@ -102,10 +104,26 @@ class PostController extends BaseController
             $log['errorType'] = 'success';
             return $this->response->setJSON($log);
         } else {
+            $categories = $this->request->getPost('val_post_categories');
+            if (is_array($categories)) {
+                $arrayCate = [];
+                foreach ($categories as $key => $value) {
+                    $arrayCate[] = [
+                        'categories_id' => $value,
+                        'post_id' => $id,
+                        'id' => sprintf('%05d', $id).sprintf('%05d', $value)
+                    ];
+                }
+                if (!empty($arrayCate)) {
+                    $categoriesTransModel->where(['post_id' => $id])->delete();
+                    $categoriesTransModel->insertBatch($arrayCate);
+                }
+            }
             $postModel->update($id, $data);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Update Data Berhasil';
             $log['errorType'] = 'success';
+            $log['categories'] = $categories;
             return $this->response->setJSON($log);
         }
     }

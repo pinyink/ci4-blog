@@ -4,6 +4,8 @@ namespace App\Controllers\Blog;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use App\Models\Blog\CategoriesModel;
+use App\Models\Blog\CategoriesTransModel;
 use CodeIgniter\Database\RawSql;
 use App\Models\Blog\PostBodyModel;
 use App\Models\Blog\PostModel;
@@ -22,8 +24,15 @@ class PostBodyController extends BaseController
     {
         $postModel = new PostModel();
         $query = $postModel->find($postId);
+
+        $categoriesModel = new CategoriesModel();
+        $categories = $categoriesModel->findAll();
+
+        $categoriesTransModel = new CategoriesTransModel();
+        $categoriesTrans = $categoriesTransModel->where(['post_id' => $postId])->findAll();
+
         $this->tema->setJudul('Post Body');
-        $this->tema->loadTema('/blog/postbody', ['post' => $query]);
+        $this->tema->loadTema('/blog/postbody', ['post' => $query, 'categories' => $categories, 'categoriesTrans' => $categoriesTrans]);
     }
 
     public function getList($postId)

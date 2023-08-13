@@ -6,6 +6,7 @@
 <link href="<?=base_url();?>/assets/alertifyjs/css/themes/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="<?=base_url();?>/assets/admincast/dist/assets/vendors/DataTables/datatables.min.css" rel="stylesheet" type="text/css" />
 <link href="<?=base_url();?>/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<link href="<?=base_url();?>/assets/admincast/dist/assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet" />
 
 <?=$this->endSection();?>
 
@@ -43,15 +44,30 @@
                             <?=csrf_field();?>
                                 <div class="form-group">
                                     <?=form_label('Url');?>
-                                    <?=form_input('val_post_url', '', ['class' => 'form-control'], 'text');?>
+                                    <?=form_input('val_post_url', $post['post_url'], ['class' => 'form-control'], 'text');?>
                                 </div>
                                 <div class="form-group">
                                     <?=form_label('Title');?>
-                                    <?=form_input('val_post_title', '', ['class' => 'form-control'], 'text');?>
+                                    <?=form_input('val_post_title', $post['post_title'], ['class' => 'form-control'], 'text');?>
                                 </div>
                                 <div class="form-group">
                                     <?=form_label('Desc');?>
-                                    <?=form_textarea('val_post_desc', '', ['class' => 'form-control', 'rows' => 3]);?>
+                                    <?=form_textarea('val_post_desc', $post['post_desc'], ['class' => 'form-control', 'rows' => 3]);?>
+                                </div>
+                                <div class="form-group">
+                                    <?=form_label('categories');?>
+                                    <select name="val_post_categories[]" id="" class="form-control select2_demo_1" multiple="">
+                                        <option value=""></option>
+                                        <?php foreach($categories as $vcate): ?>
+                                            <?php $selected = ''; ?>
+                                            <?php foreach($categoriesTrans as $vcatetrans): ?>
+                                                <?php if($vcatetrans['categories_id'] == $vcate['categories_id']): ?>
+                                                    <?php $selected = 'selected'; ?>
+                                                <?php endif ?>
+                                            <?php endforeach ?>
+                                            <option value="<?=$vcate['categories_id'];?>" <?=$selected;?>><?=$vcate['categories_desc'];?></option>
+                                        <?php endforeach ?>
+                                    </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
                             <?=form_close();?>
@@ -120,7 +136,7 @@
 <script src="<?=base_url(); ?>/assets/admincast/dist/assets/vendors/DataTables/datatables.min.js" type="text/javascript"> </script>
 <script src="<?=base_url(); ?>/assets/admincast/dist/assets/vendors/moment/min/moment.min.js" type="text/javascript"> </script>
 <script src="<?=base_url(); ?>/assets/admincast/dist/assets/vendors/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js" type="text/javascript"> </script>
-
+<script src="<?=base_url(); ?>/assets/admincast/dist/assets/vendors/select2/dist/js/select2.full.min.js" type="text/javascript"></script>
 <script>
     var table;
     var save_method;
@@ -373,23 +389,6 @@
         });
     });
 
-    $(document).ready(function () {
-        edit_data_post();
-    });
-
-    function edit_data_post() {
-        $.ajax({
-            type: "GET",
-            url: "<?=base_url('/blog/post');?>/"+<?=$post['post_id']?>+'/get_data',
-            dataType: "JSON",
-            success: function (response) {
-                $('[name="val_post_url"]').val(response.post_url);
-				$('[name="val_post_title"]').val(response.post_title);
-				$('[name="val_post_desc"]').val(response.post_desc);
-            }
-        });
-    }
-
     $(function() {
         $('#formpost').validate({
             errorClass: "invalid-feedback",
@@ -476,6 +475,11 @@
                 });
             }
         });
+    });
+
+    $(".select2_demo_1").select2({
+        placeholder: "Select a categories",
+        allowClear: true
     });
 </script>
 <?=$this->endSection();?>
