@@ -102,6 +102,7 @@ $routes->group('/blog/post', ['namespace' => 'App\Controllers\Blog'], static fun
 
 $routes->group('/blog/postbody', ['namespace' => 'App\Controllers\Blog'], static function($routes) {
     $routes->get('(:num)/index', 'PostBodyController::index/$1', ['filter' => 'auth:Y,3,1']);
+    $routes->get('(:num)/get_list', 'PostBodyController::getList/$1', ['filter' => 'auth:N,3,1']);
     $routes->post('ajax_list', 'PostBodyController::ajaxList', ['filter' => 'auth:N,3,1']);
     $routes->post('save_data', 'PostBodyController::saveData', ['filter' => 'auth:N,3,2']);
     $routes->post('update_data', 'PostBodyController::saveData', ['filter' => 'auth:N,3,3']);

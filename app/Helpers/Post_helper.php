@@ -23,6 +23,14 @@ function categories($keyword = null) : array
             return $array['-'];
         }
     }
-    
+}
+
+function categoriesEncode($key, $content)
+{
+    if (in_array($key, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'])) {
+        return "<$key>$content</$key>";
+    } else {
+        return '';
+    }
 }
 ?>

@@ -43,6 +43,7 @@ class PostController extends BaseController
             if(enforce(3, 4)) {
                 $aksi .= '<a href="javascript:;" class="text-danger ml-2" data-toggle="tooltip" data-placement="top" title="Delete Data" onclick="delete_data('.$id.')"><i class="fa fa-trash"></i></a>';
             }
+            $aksi .= '<a href="'.base_url('blog/postbody/'.$id.'/index').'" class="text-info ml-2" data-toggle="tooltip" data-placement="top" title="Blog Post"><i class="fa fa-book"></i></a>';
             $action = $aksi;
             
             $row[] = $action;

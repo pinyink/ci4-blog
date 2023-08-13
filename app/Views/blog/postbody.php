@@ -37,22 +37,40 @@
                     </div>
                 </div>
                 <div class="ibox-body">
-                    <div class="table-responsive">
-                        <table id="datatable" class="table table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th width="15%">Action</th>
-                                    <th width="10%">No</th>
-									<th style="width: 18.75%">Post Id</th>
-									<th style="width: 18.75%">Content</th>
-									<th style="width: 18.75%">Categori</th>
-									<th style="width: 18.75%">Order</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?=form_open('', ['id' => 'formpost'], ['post_id' => $post['post_id'], 'method' => 'update']);?>
+                            <?=csrf_field();?>
+                                <div class="form-group">
+                                    <?=form_label('Url');?>
+                                    <?=form_input('val_post_url', '', ['class' => 'form-control'], 'text');?>
+                                </div>
+                                <div class="form-group">
+                                    <?=form_label('Title');?>
+                                    <?=form_input('val_post_title', '', ['class' => 'form-control'], 'text');?>
+                                </div>
+                                <div class="form-group">
+                                    <?=form_label('Desc');?>
+                                    <?=form_textarea('val_post_desc', '', ['class' => 'form-control', 'rows' => 3]);?>
+                                </div>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
+                            <?=form_close();?>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th width="15%">Action</th>
+                                            <th style="width: 85%">Content</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,6 +129,8 @@
                     scrollCollapse: true,
                     responsive: true,
                     autoWidth: false,
+                    ordering: false,
+                    paging: false,
                     language: { search: "",
                         searchPlaceholder: "Search",
                         sLengthMenu: "_MENU_items"
@@ -122,7 +142,7 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         "type": "POST",
-                        "data": {<?=csrf_token();?>: '<?=csrf_hash()?>'},
+                        "data": {<?=csrf_token();?>: '<?=csrf_hash()?>', 'postId': '<?=$post['post_id']?>'},
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.responseText);
                         }
@@ -137,6 +157,17 @@
     
     function reload_table() {
         table.ajax.reload(null, false);
+    }
+
+    function reload_content() {
+        $.ajax({
+            type: "GET",
+            url: "<?=base_url('blog/postbody/'.$post['post_id'].'/get_list')?>",
+            dataType: "JSON",
+            success: function (response) {
+                $('#postbody').append(response.content);
+            }
+        });
     }
 
     $(document).ready(function () {
@@ -330,6 +361,111 @@
                             });
                             reload_table();
                             $('#modalpostbody').modal('hide');
+                        } else {
+                            toast_error(response.errorMessage);
+                        }
+                    },
+                    error: function(jqXHR){
+                        console.log(jqXHR.responseText);
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        edit_data_post();
+    });
+
+    function edit_data_post() {
+        $.ajax({
+            type: "GET",
+            url: "<?=base_url('/blog/post');?>/"+<?=$post['post_id']?>+'/get_data',
+            dataType: "JSON",
+            success: function (response) {
+                $('[name="val_post_url"]').val(response.post_url);
+				$('[name="val_post_title"]').val(response.post_title);
+				$('[name="val_post_desc"]').val(response.post_desc);
+            }
+        });
+    }
+
+    $(function() {
+        $('#formpost').validate({
+            errorClass: "invalid-feedback",
+            rules: {
+			val_post_url: {
+                required: true,
+				remote: {
+                    url: "<?=base_url('/blog/post/post_url_exist'); ?>",
+                    type: "post",
+                    data: {
+                        post_url: function() {
+                            return $('[name="val_post_url"]').val();
+                        },
+                        post_id: function() {
+                            return $('[name="post_id"]').val();
+                        },
+                        csrf_test_name: function() {
+                            return $('meta[name=X-CSRF-TOKEN]').attr("content");
+                        },
+                    },
+                },
+
+				maxlength: 128
+            },
+
+			val_post_title: {
+                required: true,
+				maxlength: 256
+            },
+
+			val_post_desc: {
+                required: true,
+				maxlength: 256
+            },
+
+            },
+            messages: {
+				val_post_url: {
+                    required:'Url harus diisi',remote: 'Url sudah Ada, Tidak bisa di Input',maxlength: 'Url Tidak Boleh Lebih dari 128 Huruf'
+                },
+
+				val_post_title: {
+                    required:'Title harus diisi',maxlength: 'Title Tidak Boleh Lebih dari 256 Huruf'
+                },
+
+				val_post_desc: {
+                    required:'Desc harus diisi',maxlength: 'Desc Tidak Boleh Lebih dari 256 Huruf'
+                },
+
+
+            },
+            highlight: function(e) {
+                $(e).closest(".form-control").removeClass("is-valid").addClass("is-invalid");
+            },
+            unhighlight: function(e) {
+                $(e).closest(".form-control").removeClass("is-invalid").addClass("is-valid");
+            },
+            submitHandler: function() {
+                var url = "<?=base_url('/blog/post/update_data');?>";
+                var formData = new FormData($($('#formpost'))[0]);
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    dataType: "JSON",
+                    processData: false,
+                    contentType:false,
+                    cache : false,
+                    success: function (response) {
+                        if(response.errorCode == 1) {
+                            alertify.set('notifier', 'position', 'top-right');
+                            alertify.notify('<span><i class="fa fa-bell"></i> ' + response.errorMessage + '</span>', response.errorType, 5, function() {
+                                console.log('dismissed');
+                            });
+                            reload_table();
+                            $('#modalpost').modal('hide');
                         } else {
                             toast_error(response.errorMessage);
                         }

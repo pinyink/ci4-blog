@@ -26,9 +26,23 @@ class PostBodyController extends BaseController
         $this->tema->loadTema('/blog/postbody', ['post' => $query]);
     }
 
+    public function getList($postId)
+    {
+        $postBodyModel = new PostBodyModel();
+        $query = $postBodyModel->select('post_body_content as content, post_body_categori as syntac')->where(['post_id' => $postId])->orderBy('post_body_order', 'asc')->findAll();
+        $array = [];
+        foreach ($query as $key => $value) {
+            $array[] = categoriesEncode($value['syntac'], $value['content']);
+        }
+        return $this->response->setJSON(['data' => $query, 'content' => $array]);
+    }
+
     public function ajaxList()
     {
         $postBodyModel = new PostBodyModel();
+        $postId = $this->request->getPost('postId');
+
+        $postBodyModel->setWhere(['a.post_id' => $postId]);
         $postBodyModel->setRequest($this->request);
         $lists = $postBodyModel->getDatatables();
         $data = [];
@@ -48,11 +62,7 @@ class PostBodyController extends BaseController
             $action = $aksi;
             
             $row[] = $action;
-            $row[] = $no;
-			$row[] = $list->post_id;
-			$row[] = $list->post_body_content;
-			$row[] = $list->post_body_categori;
-			$row[] = $list->post_body_order;
+			$row[] = categoriesEncode($list->post_body_categori, $list->post_body_content);
             $data[] = $row;
         }
         $output = [
