@@ -36,7 +36,7 @@ class PostBody extends Migration
             ],
             'post_body_created_at' => [
                 'type' => 'datetime',
-                'null' => true
+                'null' => true 
             ],
             'post_body_updated_at' => [
                 'type' => 'datetime',
