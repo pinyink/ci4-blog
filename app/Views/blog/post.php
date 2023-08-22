@@ -86,6 +86,19 @@
                         <?=form_label('Desc');?>
                         <?=form_textarea('val_post_desc', '', ['class' => 'form-control', 'rows' => 3]);?>
                     </div>
+					<div class="form-group" id="divform_post_image">
+                        <?=form_label('Image', 'val_post_image');?>
+                        <?=form_upload('val_post_image', '', ['class' => 'form-control', 'id' => 'val_post_image', 'accept' => ".png,.jpg,.jpeg", 'onchange' => "readURL(this, 'img-preview-post_image');"]);?>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" id="divimage_post_image">
+                            <h6 id="himage_post_image">Image</h6>
+                            <img src="<?=base_url('assets/admincast/dist/assets/img/image.jpg') ?>" alt="" class="img img-thumbnail img-preview " id="img-preview-post_image" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="col-md-6" id="divcol_post_image">
+                            <img src="<?=base_url('assets/admincast/dist/assets/img/image.jpg') ?>" alt="" class="img img-thumbnail img-preview" id="img-old-post_image" style="width: 100px; height: 100px;">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -140,6 +153,7 @@
     }
 
     $(document).ready(function () {
+        
 	});
     
 
@@ -148,7 +162,10 @@
         MValid[0].reset();
         MValid.find(".is-invalid").removeClass("is-invalid");
         MValid.find(".is-valid").removeClass("is-valid");
-        
+        $('#img-old-post_image').attr('src', '<?=base_url('assets/admincast/dist/assets/img/image.jpg')?>');
+        $('#divform_post_image').show();
+        $('#divcol_post_image').show();
+        $('#himage_post_image').hide();
     }
 
     function lihat_data(id) {
@@ -167,9 +184,11 @@
                 $('#modalpost').modal('show');
                 $('#modalpost .modal-title').text('Detail Data');
                 $('[name="post_id"]').val(response.post_id);
-                $('[name="val_post_url"]').val(response.post_url);
+                $('#divform_post_image').hide();$('#divcol_post_image').hide();$('#himage_post_image').show();$('[name="val_post_url"]').val(response.post_url);
 				$('[name="val_post_title"]').val(response.post_title);
 				$('[name="val_post_desc"]').val(response.post_desc);
+				$('#img-old-post_image').attr('src', '<?=base_url('')?>/'+response.post_image);
+				$('#img-preview-post_image').attr('src', '<?=base_url('assets/admincast/dist/assets/img/image.jpg')?>');
 				
             }
         });
@@ -209,6 +228,8 @@
                 $('[name="val_post_url"]').val(response.post_url);
 				$('[name="val_post_title"]').val(response.post_title);
 				$('[name="val_post_desc"]').val(response.post_desc);
+				$('#img-old-post_image').attr('src', '<?=base_url('')?>/'+response.post_image);
+				$('#img-preview-post_image').attr('src', '<?=base_url('assets/admincast/dist/assets/img/image.jpg')?>');
 				
             }
         });
@@ -289,6 +310,10 @@
 				maxlength: 256
             },
 
+			val_post_image: {
+                
+            },
+
             },
             messages: {
 				val_post_url: {
@@ -301,6 +326,10 @@
 
 				val_post_desc: {
                     required:'Desc harus diisi',maxlength: 'Desc Tidak Boleh Lebih dari 256 Huruf'
+                },
+
+				val_post_image: {
+                    
                 },
 
 

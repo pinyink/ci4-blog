@@ -36,6 +36,10 @@ class Post extends Migration
                 'unsigned' => true,
                 'default' => '0'
             ],
+            'post_image' => [
+                'type' => 'TEXT',
+                'default' => null,
+            ],
             'post_created_at' => [
                 'type' => 'datetime',
                 'null' => true

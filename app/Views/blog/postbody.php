@@ -51,9 +51,18 @@
                 </div>
                 <div class="ibox-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <?=form_open('', ['id' => 'formpost'], ['post_id' => $post['post_id'], 'method' => 'update']);?>
                             <?=csrf_field();?>
+                                <div class="row">
+                                    <div class="col-md-12" id="divcol_post_image">
+                                        <img src="<?=$post['post_image'] == null ? base_url('assets/admincast/dist/assets/img/image.jpg') : base_url($post['post_image']); ?>" alt="" class="img w-100 img-thumbnail img-preview" id="img-old-post_image" style="height: 100px;">
+                                    </div>
+                                </div>
+                                <div class="form-group" id="divform_post_image">
+                                    <?=form_label('Image', 'val_post_image');?>
+                                    <?=form_upload('val_post_image', '', ['class' => 'form-control', 'id' => 'val_post_image', 'accept' => ".png,.jpg,.jpeg", 'onchange' => "readURL(this, 'img-old-post_image');"]);?>
+                                </div>
                                 <div class="form-group">
                                     <?=form_label('Url');?>
                                     <?=form_input('val_post_url', $post['post_url'], ['class' => 'form-control'], 'text');?>
@@ -84,7 +93,7 @@
                                 <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
                             <?=form_close();?>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="table-responsive">
                                 <table id="datatable" class="table table-striped table-bordered table-hover">
                                     <thead>
@@ -199,6 +208,9 @@
     }
 
     $(document).ready(function () {
+        $('#divform_post_image').show();
+        $('#divcol_post_image').show();
+        $('#divimage_post_image').hide();
 	});
     
 
@@ -436,6 +448,10 @@
 				maxlength: 256
             },
 
+			val_post_image: {
+                
+            },
+
             },
             messages: {
 				val_post_url: {
@@ -448,6 +464,10 @@
 
 				val_post_desc: {
                     required:'Desc harus diisi',maxlength: 'Desc Tidak Boleh Lebih dari 256 Huruf'
+                },
+
+				val_post_image: {
+                    
                 },
 
 

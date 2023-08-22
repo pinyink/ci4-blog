@@ -4,7 +4,6 @@ namespace App\Controllers\Blog;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
-use App\Models\Blog\CategoriesTransModel;
 use CodeIgniter\Database\RawSql;
 use App\Models\Blog\PostModel;
 
@@ -67,16 +66,22 @@ class PostController extends BaseController
     public function saveData()
     {
         $postModel = new PostModel();
-        $categoriesTransModel = new CategoriesTransModel();
 
         $method = $this->request->getPost('method');
         
+		$imgpost_image = $this->request->getFile('val_post_image');
 
         $validation = [
             'val_post_url' => 'required','val_post_title' => 'required','val_post_desc' => 'required',
         ];
 
         
+		if (!empty($_FILES['val_post_image']['name'])) {
+			$validation['val_post_image'] = 'uploaded[val_post_image]'
+			. '|is_image[val_post_image]'
+			. '|mime_in[val_post_image,image/jpg,image/jpeg,image/gif,image/png,image/webp]'
+			. '|max_size[val_post_image,2048]';
+		}
         $validated = $this->validate($validation);
         if ($validated === false) {
             $errors = $this->validator->getErrors();
@@ -85,6 +90,10 @@ class PostController extends BaseController
                 $message .= '<li>'.$value.'</li>';
             }
             
+			if (!empty($_FILES['val_post_image']['name'])) {
+				$type = $imgpost_image->getClientMimeType();
+				$message .= '<li>'.$imgpost_image->getErrorString() . '(' . $imgpost_image->getError() . ' Type File ' . $type . ' )</li>';
+			}
             $message .= '</ul>';
 
             $log['errorCode'] = 2;
@@ -96,6 +105,18 @@ class PostController extends BaseController
 		$data['post_url'] = $this->request->getPost('val_post_url');
 		$data['post_title'] = $this->request->getPost('val_post_title');
 		$data['post_desc'] = $this->request->getPost('val_post_desc');
+		if (!empty($_FILES['val_post_image']['name'])) {
+			$th = date('Y') . '/' . date('m').'/'.date('d');
+			$path = 'uploads/blog/post/';
+			$_dir = $path . $th;
+			$dir = ROOTPATH.'public/' . $path . $th;
+			if (!file_exists($dir)) {
+				mkdir($dir, 0777, true);
+			}
+			$newName = $imgpost_image->getRandomName();
+			$imgpost_image->move($dir, $newName);
+			$data['post_image'] = $_dir.'/'.$newName;
+		}
 
         if ($method == 'save') {
             $postModel->insert($data);
@@ -104,26 +125,10 @@ class PostController extends BaseController
             $log['errorType'] = 'success';
             return $this->response->setJSON($log);
         } else {
-            $categories = $this->request->getPost('val_post_categories');
-            if (is_array($categories)) {
-                $arrayCate = [];
-                foreach ($categories as $key => $value) {
-                    $arrayCate[] = [
-                        'categories_id' => $value,
-                        'post_id' => $id,
-                        'id' => sprintf('%05d', $id).sprintf('%05d', $value)
-                    ];
-                }
-                if (!empty($arrayCate)) {
-                    $categoriesTransModel->where(['post_id' => $id])->delete();
-                    $categoriesTransModel->insertBatch($arrayCate);
-                }
-            }
             $postModel->update($id, $data);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Update Data Berhasil';
             $log['errorType'] = 'success';
-            $log['categories'] = $categories;
             return $this->response->setJSON($log);
         }
     }
@@ -131,7 +136,7 @@ class PostController extends BaseController
     public function getData($id)
     {
         $postModel = new PostModel();
-        $query = $postModel->select("post_id, post_url, post_title, post_desc")->find($id);
+        $query = $postModel->select("post_id, post_url, post_title, post_desc, post_image")->find($id);
         return $this->response->setJSON($query);
     }
 
