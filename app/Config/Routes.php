@@ -131,3 +131,6 @@ $routes->group('/blog/filemanager', ['namespace' => 'App\Controllers\Blog'], sta
     $routes->delete('(:num)/delete_data', 'FileManagerController::deleteData/$1', ['filter' => 'auth:N,2,4']);
 	$routes->post('files_name_exist', 'FileManagerController::filesnameExist', ['filter' => 'auth:N,2,2']);
 });
+
+// front end
+$routes->get('/beranda', 'BerandaController::index', ['namespace' => 'App\Controllers\Frontend']);

@@ -29,6 +29,11 @@
                             <a href="<?= base_url('blog/filemanager'); ?>">File Manager</a>
                         </li>
                     <?php endif ?>
+                    <?php if (enforce(3, 1)) : ?>
+                        <li>
+                            <a href="<?= base_url('blog/post'); ?>">Post</a>
+                        </li>
+                    <?php endif ?>
                 </ul>
             </li>
             <?php if (session('level') == 1) : ?>
