@@ -40,6 +40,11 @@ class Post extends Migration
                 'type' => 'TEXT',
                 'default' => null,
             ],
+            'post_created_by' => [
+                'type' => 'VARCHAR',
+                'constraint' => '64',
+                'default' => NULL
+            ],
             'post_created_at' => [
                 'type' => 'datetime',
                 'null' => true

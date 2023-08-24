@@ -4,6 +4,7 @@ namespace App\Controllers\Blog;
 
 use App\Controllers\BaseController;
 use App\Libraries\Tema;
+use App\Models\Blog\CategoriesTransModel;
 use CodeIgniter\Database\RawSql;
 use App\Models\Blog\PostModel;
 
@@ -119,6 +120,7 @@ class PostController extends BaseController
 		}
 
         if ($method == 'save') {
+            $data['post_created_by'] = session('user_id');
             $postModel->insert($data);
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Simpan Data Berhasil';
@@ -126,6 +128,20 @@ class PostController extends BaseController
             return $this->response->setJSON($log);
         } else {
             $postModel->update($id, $data);
+            $categoriesTransModel = new CategoriesTransModel();
+            $cate = $this->request->getPost('val_post_categories');
+            $arr = [];
+            foreach ($cate as $key => $value) {
+                $trans = [];
+                $trans['id'] = sprintf('%05d', $id).sprintf('%05d', $value);
+                $trans['categories_id'] = $value;
+                $trans['post_id'] = $id;
+                array_push($arr, $trans);
+            }
+            if (!empty($arr)) {
+                $categoriesTransModel->where('post_id', $id)->delete();
+                $categoriesTransModel->insertBatch($arr);
+            }
             $log['errorCode'] = 1;
             $log['errorMessage'] = 'Update Data Berhasil';
             $log['errorType'] = 'success';
