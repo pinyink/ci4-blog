@@ -168,8 +168,8 @@ header .navbar-mobile .menu li a:hover {
 #hero h1 {
     font-size: 48pt;
     font-weight: 400;
-    margin-top: -20px;
-    margin-bottom: -20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     color: rgb(0, 0, 0, 0.75);
     line-height: 1;
 }
@@ -291,14 +291,33 @@ a.categories:hover {
     }
     
     .box {
-        width: 100%;
+        width: 50%;
         margin-bottom: 50px;
+    }
+
+    .box img {
+        width: 100%;
+        height: 200px;
+    }
+
+    .box-body .user-date {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .paging {
         width: 100%;
         margin: 30px 45px 10px 45px;
     }
+}
+
+@media (max-width : 441px) {
+    .box img {
+        width: 100%;
+        height: 140px;
+    }
+
 }
 
 .img-blog {
