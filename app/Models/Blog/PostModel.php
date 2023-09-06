@@ -14,7 +14,7 @@ class PostModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['post_url', 'post_title', 'post_desc', 'post_image'];
+    protected $allowedFields    = ['post_url', 'post_title', 'post_desc', 'post_image', 'post_created_by'];
 
     // Dates
     protected $useTimestamps = true;

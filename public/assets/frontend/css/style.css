@@ -220,7 +220,7 @@ header .navbar-mobile .menu li a:hover {
 }
 
 .box {
-    width: calc((100% - 40px)/3);
+    width: calc((100% - 40px)/4);
     min-height: 400px;
     display: flex;
     flex-direction: column;

@@ -366,7 +366,10 @@
                             reload_table();
                             $('#modalpost').modal('hide');
                         } else {
-                            toast_error(response.errorMessage);
+                            alertify.set('notifier', 'position', 'top-right');
+                            alertify.notify('<span><i class="fa fa-bell"></i> ' + response.errorMessage + '</span>', response.errorType, 5, function() {
+                                console.log('dismissed');
+                            });
                         }
                     },
                     error: function(jqXHR){
