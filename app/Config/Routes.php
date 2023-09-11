@@ -90,6 +90,8 @@ $routes->group('/admin/menuakses', ['namespace' => 'App\Controllers\Admin'], sta
 $routes->get('/menu_dua', 'Menu_dua::index', ['filter' => 'auth:N, 2, 1', 'namespace' => 'App\Controllers']);
 $routes->get('/menu_satu', 'Menu_satu::index', ['filter' => 'auth:N, 1, 1', 'namespace' => 'App\Controllers']);
 
+$routes->get('/mpdf', 'MpdfController::index', ['filter' => 'auth:Y', 'namespace' => 'App\Controllers']);
+
 $routes->group('/blog/post', ['namespace' => 'App\Controllers\Blog'], static function($routes) {
     $routes->get('/', 'PostController::index', ['filter' => 'auth:Y,3,1']);
     $routes->post('ajax_list', 'PostController::ajaxList', ['filter' => 'auth:N,3,1']);
