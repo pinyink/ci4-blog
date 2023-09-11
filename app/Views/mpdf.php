@@ -41,8 +41,13 @@
             text-align: justify;
         }
 
+        .table {
+            margin-left: 0;
+        }
+
         .table tr td {
             padding: 5px;
+            padding-left: 0;
         }
     </style>
 </head>
