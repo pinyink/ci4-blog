@@ -27,7 +27,7 @@ if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index', ['filter' => 'auth:Y']);
+$routes->get('/', 'BerandaController::index', ['namespace' => 'App\Controllers\Frontend']);
 $routes->get('/home', 'Home::index', ['filter' => 'auth:Y']);
 $routes->get('/login', 'Login::index');
 $routes->get('/logout', 'Login::logout');
@@ -136,3 +136,4 @@ $routes->group('/blog/filemanager', ['namespace' => 'App\Controllers\Blog'], sta
 
 // front end
 $routes->get('/beranda', 'BerandaController::index', ['namespace' => 'App\Controllers\Frontend']);
+$routes->get('article/(:any)', 'ArticleController::index/$1', ['namespace' => 'App\Controllers\Frontend']);

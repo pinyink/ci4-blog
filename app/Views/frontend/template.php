@@ -10,12 +10,12 @@
 </head>
 <body>
     <header>
-        <div class="logo">Your Logo</div>
+        <div class="logo">
+            <img src="<?=base_url('assets/img/pindipin.png')?>" alt="" style="height: 20px">
+        </div>
         <nav class="navbar" id="navbar">
             <ul class="menu">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Profil</a></li>
-                <li><a href="#">Contact Us</a></li>
+                <li><a href="<?=base_url('beranda'); ?>">Home</a></li>
             </ul>
             <ul class="header-right">
                 <li><a href="<?=base_url('login');?>">Login</a></li>

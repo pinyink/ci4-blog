@@ -40,8 +40,8 @@ class BerandaController extends BaseController
                         </span>
                     </div>
                     <div class=\"div-title\">
-                        <a href=\"#\" class=\"title\">".$value['post_title']."</a>
-                        <a href=\"#\" target=\"_blank\"><i class=\"fa fa-external-link\"></i></a>
+                        <a href=\"".base_url('article/').$value['post_url']."\" class=\"title\">".$value['post_title']."</a>
+                        <a href=\"".base_url('article/').$value['post_url']."\" target=\"_blank\"><i class=\"fa fa-external-link\"></i></a>
                     </div>
                     <div class=\"description\">
                         ".$value['post_desc']."
