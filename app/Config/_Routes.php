@@ -27,12 +27,11 @@ if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index', ['filter' => 'auth:Y']);
+$routes->get('/', 'BerandaController::index', ['namespace' => 'App\Controllers\Frontend']);
 $routes->get('/home', 'Home::index', ['filter' => 'auth:Y']);
 $routes->get('/login', 'Login::index');
 $routes->get('/logout', 'Login::logout');
 $routes->post('auth', 'Login::loginAksi');
-
 $routes->get('/setting', 'SettingController::index', ['filter' => 'admin', 'namespace' => 'App\Controllers']);
 $routes->get('/setting/profil', 'Profil::index', ['filter' => 'auth:N', 'namespace' => 'App\Controllers\Setting']);
 $routes->get('/setting/profil/getData', 'Profil::getData', ['filter' => 'auth:N' , 'namespace' => 'App\Controllers\Setting']);
@@ -85,16 +84,13 @@ $routes->group('/admin/menuakses', ['namespace' => 'App\Controllers\Admin'], sta
     $routes->get('get_data/(:num)', 'MenuAksesController::getData/$1', ['filter' => 'adminjson']);
     $routes->delete('delete_data/(:num)', 'MenuAksesController::deleteData/$1', ['filter' => 'adminjson']);
 });
-
-$routes->group('statistic', ['namespace' => 'App\Controllers'], static function($routes) {
-    $routes->get('/', 'StatisticController::index', ['filter' => 'admin']);
-    $routes->post('permonth', 'StatisticController::permonth', ['filter' => 'admin']);
-});
 /**
  * Menu Content
  */
 $routes->get('/menu_dua', 'Menu_dua::index', ['filter' => 'auth:N, 2, 1', 'namespace' => 'App\Controllers']);
 $routes->get('/menu_satu', 'Menu_satu::index', ['filter' => 'auth:N, 1, 1', 'namespace' => 'App\Controllers']);
+
+$routes->get('/mpdf', 'MpdfController::index', ['filter' => 'auth:Y', 'namespace' => 'App\Controllers']);
 
 $routes->group('/blog/post', ['namespace' => 'App\Controllers\Blog'], static function($routes) {
     $routes->get('/', 'PostController::index', ['filter' => 'auth:Y,3,1']);
